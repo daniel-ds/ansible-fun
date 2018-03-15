@@ -1,0 +1,17 @@
+---
+- hosts: tag_ver*
+#- hosts: tag_version_v1
+  vars:
+    myuser: ubuntu
+  remote_user: "{{ myuser }}"
+  tasks:
+    - name: install latest apache2 web server
+      become: true
+      apt:
+        name: apache2
+        state: absent
+      notify: pingme
+
+  handlers:
+    - name: pingme
+      ping:

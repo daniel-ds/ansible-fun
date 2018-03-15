@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+#- hosts: tag_ver*
+#- hosts: tag_version_v1
+#  vars:
+#    myuser: ubuntu
+#  remote_user: "{{ myuser }}"
+  tasks:
+    - name: create S3 bucket
+      s3_bucket:
+#        region: eu-west-2
+        name: dds-personal-test-bucket
+        state: present
+#      aws_s3:
+#        bucket: dds-personal-test-bucket
+#        region: eu-west-2
+#        mode: delete
+#        permission: "private"
+
