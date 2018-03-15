@@ -7,10 +7,18 @@
 #  remote_user: "{{ myuser }}"
   tasks:
     - name: create S3 bucket
+    # Use s3_bucket instead of aws_s3 to create bucket as it lets you enable versioning and add tags
       s3_bucket:
 #        region: eu-west-2
         name: dds-personal-test-bucket
         state: present
+    - name: create iam policy
+      iam_policy:
+        policy_name: dds-s3-policy
+        policy_document: policy.json
+        iam_type: user
+        iam_name: dds-test
+
 #      aws_s3:
 #        bucket: dds-personal-test-bucket
 #        region: eu-west-2

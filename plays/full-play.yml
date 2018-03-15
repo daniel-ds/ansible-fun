@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+#- hosts: tag_ver*
+#- hosts: tag_version_v1
+#  vars:
+#    myuser: ubuntu
+#  remote_user: "{{ myuser }}"
+  tasks:
+    - name: create S3 bucket
+    # Use s3_bucket instead of aws_s3 to create bucket as it lets you enable versioning and add tags
+      s3_bucket:
+#        region: eu-west-2
+        name: dds-personal-test-bucket
+        state: present
+    - name: create managed iam policy
+      iam_managed_policy:
+        policy_name: dds-s3-policy
+        policy_description: "A Cool policy: dds-s3-policy"
+        state: present
+        policy: "{{ lookup('file', 'policy.json') }}"
+
+

@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  vars:
+    s3_config_bucket: "myBucket2"
+  tasks:
+    - name: create managed iam policy
+      iam_managed_policy:
+        policy_name: dds-s3-policy
+        policy_description: "A Cool policy: dds-s3-policy"
+        state: present
+        policy: "{{ lookup('template', '../policy/s3-read.yml') | from_yaml }}"
+
+
