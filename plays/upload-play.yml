@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  vars:
+    top_level: copy
+    mypass: !vault |
+              $ANSIBLE_VAULT;1.2;AES256;dds
+              64393837363662333636326162643763646661656238396333383564643939336162303061393666
+              6537303732313063373765613430303339666538623231300a636262343234303164306161656330
+              37633739343963646130653634306139386134623339653964643434613134323834316630613736
+              3563316564643437350a393961393064346363313337333939623863396464386130633663613265
+              3830
+#  user: dds
+  vars_files:
+    - vars/encrptyed-file.yml
+  tasks:
+    - name: Create top level directory
+      file:
+        path: "{{ top_level }}"
+        state: directory
+    - name: Create new directories
+      file:
+        path: "{{ top_level }}/{{ item.path }}"
+        state: directory
+        mode: '{{ item.mode }}'
+      with_filetree: config
+      when: item.state == 'directory'
+    - name: Template files into new directories
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ top_level }}/{{ item.path }}"
+      with_filetree: config/
+      when: item.state == 'file'
+    - name: Upload files
+      s3_sync:
+        bucket: dds-test-personal-testing-bucket
+        file_root: copy/
+        key_prefix: copy/
+        region: eu-west-2
+        delete: yes
+    - name: Delete created directories
+      file:
+        path: "{{ top_level }}"
+        state: absent
+

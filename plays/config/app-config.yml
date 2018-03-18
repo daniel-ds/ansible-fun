@@ -1,0 +1,2 @@
+url: {{ cool }}
+pass: {{ mypass }}
