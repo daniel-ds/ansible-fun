@@ -3,11 +3,12 @@
   vars:
     env: test
     s3_config_bucket: dds-{{ env }}-personal-testing-bucket
+    aws_region: eu-west-2
   tasks:
     - name: Create S3 bucket
     # Use s3_bucket instead of aws_s3 to create bucket as it lets you enable versioning and add tags if we wanted.
       s3_bucket:
-        region: eu-west-2
+        region: "{{ aws_region }}"
         name: "{{ s3_config_bucket }}"
         state: present
     - name: Create ReadAccess policy to S3 config bucket
