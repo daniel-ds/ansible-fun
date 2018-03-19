@@ -1,0 +1,18 @@
+- name: Create S3 bucket
+# Use s3_bucket instead of aws_s3 to create bucket as it lets you enable versioning and add tags if we wanted.
+  s3_bucket:
+    region: "{{ aws_region }}"
+    name: "{{ s3_config_bucket }}"
+    state: present
+- name: Create ReadAccess policy to S3 config bucket
+  iam_managed_policy:
+    policy_name: "{{ env }}-s3-config-ReadAccess"
+    policy_description: "A ReadOnly Access policy to the S3 bucket containing app config."
+    state: present
+    policy: "{{ lookup('template', 'policy/s3-read.yml') | from_yaml }}"
+- name: Create WriteAccess policy to S3 config bucket
+  iam_managed_policy:
+    policy_name: "{{ env }}-s3-config-WriteAccess"
+    policy_description: "A Write Access policy to the S3 bucket containing app config."
+    state: present
+    policy: "{{ lookup('template', 'policy/s3-write.yml') | from_yaml }}"

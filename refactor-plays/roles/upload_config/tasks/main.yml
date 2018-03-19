@@ -1,0 +1,32 @@
+- name: Ensure Temporary directories are absent
+  file:
+    path: "{{ base_temp_dir }}"
+    state: absent
+- name: Create top level directory
+  file:
+    path: "{{ base_temp_dir }}"
+    state: directory
+- name: Create new config directories
+  file:
+    path: "{{ base_temp_dir }}/{{ item.path }}"
+    state: directory
+    mode: '{{ item.mode }}'
+  with_filetree: "{{ config_dir }}"
+  when: item.state == 'directory'
+- name: Template config files into new directories
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ base_temp_dir }}/{{ item.path }}"
+  with_filetree: "{{ config_dir }}"
+  when: item.state == 'file'
+- name: Upload directory
+  s3_sync:
+    bucket: "{{ s3_config_bucket }}"
+    file_root: "{{ base_temp_dir }}"
+    key_prefix: "{{ env }}"
+    region: "{{ aws_region }}"
+    delete: yes
+- name: Delete created temporary directories
+  file:
+    path: "{{ base_temp_dir }}"
+    state: absent

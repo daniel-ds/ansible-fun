@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  vars:
+    base_temp_dir: tmp-decrypted-config
+    env: test
+    config_dir: configs/{{ env }}
+    s3_config_bucket: dds-{{ env }}-personal-testing-bucket
+    aws_region: eu-west-2
+  vars_files:
+    - configs/test-vars.yml
+  tasks:
+    - import_role:
+        name: create_config_bucket
+    - import_role:
+        name: upload_config
+
