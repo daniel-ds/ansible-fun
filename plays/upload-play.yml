@@ -33,12 +33,12 @@
     - name: Upload directory
       s3_sync:
         bucket: "{{ s3_config_bucket }}"
-        file_root: "{{ config_dir }}"
+        file_root: "{{ base_temp_dir }}"
         key_prefix: "{{ config_dir }}"
         region: "{{ aws_region }}"
         delete: yes
-    - name: Delete created temporary directories
-      file:
-        path: "{{ base_temp_dir }}"
-        state: absent
+#    - name: Delete created temporary directories
+#      file:
+#        path: "{{ base_temp_dir }}"
+#        state: absent
 
