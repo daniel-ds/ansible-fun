@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  vars:
+    aws_region: eu-west-2
+  tasks:
+    - name: Create alarm SNS topic
+      sns_topic:
+        name: "dds-alarms-topic"
+        state: present
+        display_name: "dds alarms"
+        region: "{{ aws_region }}"
+#        subscriptions:
+#          - endpoint: "d.@gmail.com"
+#            protocol: "email"
+

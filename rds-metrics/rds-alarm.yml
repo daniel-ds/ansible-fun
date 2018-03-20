@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  vars:
+    aws_region: eu-west-2
+  tasks:
+    - name: create alarm
+      ec2_metric_alarm:
+        state: present
+        region: "{{ aws_region }}"
+        name: "RDS alarm"
+        metric: "CPUUtilization"
+        namespace: "AWS/RDS"
+        statistic: Average
+        comparison: ">="
+        threshold: 50
+        period: 300
+        evaluation_periods: 1
+        unit: "Percent"
+        description: "My RDS alarm"
+        dimensions:
+          DBInstanceIdentifier: dds-rds
+        alarm_actions:
+          - "arn:aws:sns:eu-west-2:xx:dds-alarms-topic"
+
